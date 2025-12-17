@@ -8,6 +8,7 @@ export const Counter: React.FC = () => {
 
     const [step, setStep] = useState<number>(1);
 
+    // 
     const [history, setHistory] = useState<number[]>(() => {
         const saved = localStorage.getItem("Count History");
         return saved ? JSON.parse(saved) : [];
@@ -35,54 +36,82 @@ export const Counter: React.FC = () => {
         setCount(0);
         setHistory([]);
     };
-    return (
-        <div>
-            <div>
-                <div>
-                    <h1>Counter App</h1>
-                </div>
-                <div>
-                    <p>Current Count: {count}</p>
-                </div>
-                <div>
-                    <div>
-                        <button
-                            onClick={() => updateCountAndHistory(count - step)}
-                        >
-                            Decrement
-                        </button>
+return (
+        <div className="container py-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6">
+                    {/* Main Counter Card */}
+                    <div className="card shadow-sm mb-4">
+                        <div className="card-header bg-primary text-white text-center">
+                            <h1 className="h4 mb-0">Counter App</h1>
+                        </div>
+                        <div className="card-body text-center">
+                            <div className="display-4 fw-bold mb-4">{count}</div>
+                            
+                            <div className="d-flex justify-content-center gap-2 mb-4">
+                                <button
+                                    className="btn btn-outline-danger px-4"
+                                    onClick={() => updateCountAndHistory(count - step)}
+                                >
+                                    - {step}
+                                </button>
+                                <button 
+                                    className="btn btn-warning px-4" 
+                                    onClick={handleReset}
+                                >
+                                    Reset
+                                </button>
+                                <button
+                                    className="btn btn-outline-success px-4"
+                                    onClick={() => updateCountAndHistory(count + step)}
+                                >
+                                    + {step}
+                                </button>
+                            </div>
 
-                        <button
-                            onClick={() => updateCountAndHistory(count + step)}
-                        >
-                            Increment
-                        </button>
-                        <button onClick={handleReset}>Reset</button>
+                            <div className="row g-3 align-items-center justify-content-center border-top pt-3">
+                                <div className="col-auto">
+                                    <label htmlFor="stepInput" className="col-form-label fw-bold">Step Value:</label>
+                                </div>
+                                <div className="col-auto">
+                                    <input
+                                        id="stepInput"
+                                        type="number"
+                                        className="form-control"
+                                        min={1}
+                                        value={step}
+                                        onChange={handleStepChange}
+                                        style={{ width: '80px' }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label htmlFor="value">Step Value</label>
-                        <input
-                            type="number"
-                            min={1}
-                            value={step}
-                            onChange={handleStepChange}
-                        />
-                    </div>
-                </div>
 
-                <div>
-                    <div>
-                        <p>Count History: {history.length}</p>
-                    </div>
-                    <div>
-                        <ul>
-                            {history.map((h, index) => (
-                                <li key={index}>{h}</li>
-                            ))}
-                        </ul>
+                    {/* History Section */}
+                    <div className="card shadow-sm">
+                        <div className="card-header bg-light d-flex justify-content-between align-items-center">
+                            <span className="fw-bold text-secondary">History</span>
+                            <span className="badge bg-secondary rounded-pill">{history.length} Entries</span>
+                        </div>
+                        <div className="card-body p-0" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                            {history.length > 0 ? (
+                                <ul className="list-group list-group-flush">
+                                    {history.slice().reverse().map((h, index) => (
+                                        <li key={index} className="list-group-item d-flex justify-content-between">
+                                            <small className="text-muted">Change #{history.length - index}</small>
+                                            <span className="fw-bold">{h}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div className="p-3 text-center text-muted italic">No activity yet</div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     );
 };
+
