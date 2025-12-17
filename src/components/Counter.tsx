@@ -1,7 +1,7 @@
 import React, { useEffect, useState, type ChangeEvent } from "react";
 
 export const Counter: React.FC = () => {
-    // a useState hook for count and localStorage for saving it 
+    // a useState hook for count and localStorage for saving it
     const [count, setCount] = useState<number>(() => {
         const saved = localStorage.getItem("Current Count");
         return saved !== null ? Number(saved) : 0;
@@ -16,10 +16,15 @@ export const Counter: React.FC = () => {
         return saved ? JSON.parse(saved) : [];
     });
 
-    // auto-save the number whenever it changes so
+    // Save the history array to localStorage with simulated async and cleanup
     useEffect(() => {
-        localStorage.setItem("Current Count", String(count));
-    }, [count]);
+        const saveTimeout = setTimeout(() => {
+            localStorage.setItem("Count History", JSON.stringify(history));
+        }, 200); // simulate async save
+
+        // Cleanup prevents overlapping saves if history changes quickly
+        return () => clearTimeout(saveTimeout);
+    }, [history]);
 
     // save the whole history list; must be stringifyed first!
     useEffect(() => {
@@ -152,4 +157,3 @@ export const Counter: React.FC = () => {
         </div>
     );
 };
-
