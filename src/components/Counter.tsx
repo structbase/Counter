@@ -1,8 +1,17 @@
 import type React from "react";
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 
 export const Counter: React.FC = () => {
     const [count, setCount] = useState<number>(0);
+    const [step, setStep] = useState<number>(1);
+
+const handleStepChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    if (value >= 1) {
+        setStep(value);
+    }
+};
+
 
     return (
         <div>
@@ -16,19 +25,21 @@ export const Counter: React.FC = () => {
                 <div>
                     <div>
                         <button
-                            onClick={() => count > 0 && setCount(count - 1)}
+                            onClick={() =>
+                                count > 0 && setCount(count - 1 * step)
+                            }
                         >
                             Decrement
                         </button>
 
-                        <button onClick={() => setCount(count + 1)}>
+                        <button onClick={() => setCount(count + 1 * step)}>
                             Increment
                         </button>
                         <button onClick={() => setCount(0)}>Reset</button>
                     </div>
                     <div>
                         <label htmlFor="value">Step Value</label>
-                        <input type="number" min={1} value={1} />
+                        <input type="number" min={1} value={step} onChange={handleStepChange}/>
                     </div>
                 </div>
 
