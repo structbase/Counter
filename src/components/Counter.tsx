@@ -18,6 +18,11 @@ export const Counter: React.FC = () => {
         setHistory((prevHistory) => [...prevHistory, newCount]);
     };
 
+    const handleReset = () => {
+        setCount(0); 
+        setHistory([]);
+    };
+
     return (
         <div>
             <div>
@@ -40,7 +45,7 @@ export const Counter: React.FC = () => {
                         >
                             Increment
                         </button>
-                        <button onClick={() => setCount(0)}>Reset</button>
+                        <button onClick={handleReset}>Reset</button>
                     </div>
                     <div>
                         <label htmlFor="value">Step Value</label>
