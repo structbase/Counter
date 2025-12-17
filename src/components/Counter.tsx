@@ -1,28 +1,40 @@
-import type React from "react";
-import { useState, type ChangeEvent } from "react";
+import React, { useEffect, useState, type ChangeEvent } from "react";
 
 export const Counter: React.FC = () => {
-    const [count, setCount] = useState<number>(0);
+    const [count, setCount] = useState<number>(() => {
+        const saved = localStorage.getItem("Current Count");
+        return saved !== null ? Number(saved) : 0;
+    });
+
     const [step, setStep] = useState<number>(1);
-    const [history, setHistory] = useState<number[]>([]);
+
+    const [history, setHistory] = useState<number[]>(() => {
+        const saved = localStorage.getItem("Count History");
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem("Current Count", String(count));
+    }, [count]);
+
+    useEffect(() => {
+        localStorage.setItem("Count History", JSON.stringify(history));
+    }, [history]);
 
     const handleStepChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = Number(e.target.value);
-        if (value >= 1) {
-            setStep(value);
-        }
+        const newStep = Number(e.target.value);
+        if (newStep >= 1) setStep(newStep);
     };
 
-    const handleCountAndHistory = (newCount: number) => {
+    const updateCountAndHistory = (newCount: number) => {
         setCount(newCount);
-        setHistory((prevHistory) => [...prevHistory, newCount]);
+        setHistory((prev) => [...prev, newCount]);
     };
 
     const handleReset = () => {
-        setCount(0); 
+        setCount(0);
         setHistory([]);
     };
-
     return (
         <div>
             <div>
@@ -35,13 +47,13 @@ export const Counter: React.FC = () => {
                 <div>
                     <div>
                         <button
-                            onClick={() => handleCountAndHistory(count - step)}
+                            onClick={() => updateCountAndHistory(count - step)}
                         >
                             Decrement
                         </button>
 
                         <button
-                            onClick={() => handleCountAndHistory(count + step)}
+                            onClick={() => updateCountAndHistory(count + step)}
                         >
                             Increment
                         </button>
